@@ -73,8 +73,8 @@ func RunProgram() {
 	isClaimed := GetClaimedStatus(token[0], ltuid[0])
 
 	if !isClaimed {
-		message := ClaimReward(token[0], ltuid[0])
-		fmt.Println(message)
+		ClaimReward(token[0], ltuid[0])
+		fmt.Println("You've claimed your reward today!")
 	} else {
 		fmt.Println("Traveler, you've already checked in today~")
 	}
