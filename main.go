@@ -22,6 +22,7 @@ import (
 )
 
 var actId = "nil"
+var autoHide = false
 
 func main() {
 	s := gocron.NewScheduler(time.UTC)
@@ -58,6 +59,10 @@ func showConsole() {
 func RunProgram() {
 	ReadConfiguration()
 
+	if autoHide {
+		hideConsole()
+	}
+
 	token := kooky.ReadCookies(kooky.Valid, kooky.DomainHasSuffix(`.hoyolab.com`), kooky.Name(`ltoken`))
 	ltuid := kooky.ReadCookies(kooky.Valid, kooky.DomainHasSuffix(`.hoyolab.com`), kooky.Name(`ltuid`))
 
@@ -81,13 +86,14 @@ func RunProgram() {
 }
 
 type Config struct {
-	ActId string
+	ActId          string
+	AutoHideWindow bool
 }
 
 func ReadConfiguration() {
 	if _, err := os.Stat("config.json"); err == nil {
 	} else {
-		configMap := Config{ActId: "e202102251931481"}
+		configMap := Config{ActId: "e202102251931481", AutoHideWindow: false}
 		jsonByte, _ := json.MarshalIndent(configMap, "", " ")
 
 		_ = ioutil.WriteFile("config.json", jsonByte, 0644)
@@ -100,6 +106,7 @@ func ReadConfiguration() {
 	json.Unmarshal(byteValue, &result)
 
 	actId = reflect.ValueOf(result["ActId"]).String()
+	autoHide = reflect.ValueOf(result["AutoHideWindow"]).Bool()
 }
 
 func GetClaimedStatus(token *kooky.Cookie, ltuid *kooky.Cookie) bool {
