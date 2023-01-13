@@ -193,6 +193,8 @@ func onReady() {
 
 	bShow := systray.AddMenuItem("Show window", "Show console")
 	bHide := systray.AddMenuItem("Hide window", "Hide console")
+	systray.AddSeparator()
+	bExit := systray.AddMenuItem("Exit", "Exit the whole app")
 	go func() {
 		for {
 			select {
@@ -200,14 +202,10 @@ func onReady() {
 				hideConsole()
 			case <-bShow.ClickedCh:
 				showConsole()
+			case <-bExit.ClickedCh:
+				systray.Quit()
 			}
 		}
-	}()
-	systray.AddSeparator()
-	bExit := systray.AddMenuItem("Exit", "Exit the whole app")
-	go func() {
-		<-bExit.ClickedCh
-		systray.Quit()
 	}()
 }
 
